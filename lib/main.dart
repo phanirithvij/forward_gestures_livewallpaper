@@ -15,57 +15,6 @@ class RootWidget extends StatelessWidget {
   }
 }
 
-class FirstRoute extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.transparent,
-      appBar: AppBar(
-        title: Text(
-          'First Route',
-          style: TextStyle(color: Colors.white),
-        ),
-      ),
-      body: Center(
-        child: RaisedButton(
-          child: Text('Open another route'),
-          onPressed: () {
-            // Navigate to second route when tapped.
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => SecondRoute()),
-            );
-          },
-        ),
-      ),
-    );
-  }
-}
-
-class SecondRoute extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.transparent,
-      appBar: AppBar(
-        title: Text(
-          "Second Route",
-          style: TextStyle(color: Colors.white),
-        ),
-      ),
-      body: Center(
-        child: RaisedButton(
-          onPressed: () {
-            // Navigate back to first route when tapped.
-            Navigator.pop(context);
-          },
-          child: Text('Go back!'),
-        ),
-      ),
-    );
-  }
-}
-
 class MyHome extends StatelessWidget {
   const MyHome({
     Key key,
@@ -75,17 +24,56 @@ class MyHome extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.transparent,
-      body: Center(
-        child: RaisedButton(
-          child: Text("Open first Route"),
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => FirstRoute()),
-            );
-          },
+      body: Homepage(),
+    );
+  }
+}
+
+class Homepage extends StatelessWidget {
+  static const platform = const MethodChannel(
+    'com.example.forward_gestures_livewallpaper/events',
+  );
+
+  const Homepage({
+    Key key,
+  }) : super(key: key);
+
+  Future<void> _sendWallpaperEvent(TapDownDetails ev) async {
+    try {
+      await platform.invokeMethod(
+          "wallpaperEvent", [ev.globalPosition.dx, ev.globalPosition.dy]);
+    } on PlatformException catch (e) {
+      debugPrint("Failed to send a Wallpaper command");
+      print(e);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      child: SizedBox.expand(
+        child: Container(
+          color: Colors.transparent,
+          child: PageView(
+            children: <Widget>[
+              Center(
+                child: Text("Hey 1"),
+              ),
+              Center(
+                child: Text("Hey 2"),
+              ),
+              Center(
+                child: Text("Hey 3"),
+              ),
+            ],
+          ),
         ),
       ),
+      onTapDown: (ev) {
+//        print(ev.globalPosition.dx);
+//        print(ev.globalPosition.dy);
+        _sendWallpaperEvent(ev);
+      },
     );
   }
 }
