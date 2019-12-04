@@ -9,7 +9,7 @@
          FlutterApplication and put your custom class here. -->
     <application
         android:name="io.flutter.app.FlutterApplication"
-        android:label="invisible_flutter"
+        android:label="forward_gestures_livewallpaper"
         android:icon="@mipmap/ic_launcher"
         tools:ignore="GoogleAppIndexingWarning"
         android:allowBackup="false"
