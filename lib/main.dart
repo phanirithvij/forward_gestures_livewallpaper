@@ -53,17 +53,38 @@ class Homepage extends StatelessWidget {
     return GestureDetector(
       child: SizedBox.expand(
         child: Container(
-          color: Colors.transparent,
+          //   color: Colors.transparent,
           child: PageView(
             children: <Widget>[
-              Center(
-                child: Text("Hey 1"),
+              Container(
+                // color: Colors.transparent,
+                child: Center(
+                  child: Text("Page 1"),
+                ),
               ),
-              Center(
-                child: Text("Hey 2"),
+              Container(
+                color: Colors.black12,
+                child: Center(
+                  child: Text("Page 2"),
+                ),
               ),
-              Center(
-                child: Text("Hey 3"),
+              Container(
+                color: Colors.black26,
+                child: Center(
+                  child: Text("Page 3"),
+                ),
+              ),
+              Container(
+                color: Colors.black38,
+                child: Center(
+                  child: Text("Page 4"),
+                ),
+              ),
+              Container(
+                color: Colors.black45,
+                child: Center(
+                  child: Text("Page 5"),
+                ),
               ),
             ],
           ),
