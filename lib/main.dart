@@ -41,7 +41,9 @@ class Homepage extends StatelessWidget {
   Future<void> _sendWallpaperEvent(TapDownDetails ev) async {
     try {
       await platform.invokeMethod(
-          "wallpaperEvent", [ev.globalPosition.dx, ev.globalPosition.dy]);
+        "wallpaperEvent",
+        [ev.globalPosition.dx, ev.globalPosition.dy],
+      );
     } on PlatformException catch (e) {
       debugPrint("Failed to send a Wallpaper command");
       print(e);
@@ -53,11 +55,9 @@ class Homepage extends StatelessWidget {
     return GestureDetector(
       child: SizedBox.expand(
         child: Container(
-          //   color: Colors.transparent,
           child: PageView(
             children: <Widget>[
               Container(
-                // color: Colors.transparent,
                 child: Center(
                   child: Text("Page 1"),
                 ),
@@ -91,8 +91,8 @@ class Homepage extends StatelessWidget {
         ),
       ),
       onTapDown: (ev) {
-//        print(ev.globalPosition.dx);
-//        print(ev.globalPosition.dy);
+        // print(ev.globalPosition.dx);
+        // print(ev.globalPosition.dy);
         _sendWallpaperEvent(ev);
       },
     );
