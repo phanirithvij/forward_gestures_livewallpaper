@@ -54,6 +54,8 @@ class WallpaperAPI with ChangeNotifier {
 
   void scrollListener() {
     // print(scrollController.page);
+    // TODO: Android change WallpaperOffsetSteps
+    // This doesn't seem right
     setWallpaperOffsets(scrollController.page, 5);
   }
 
