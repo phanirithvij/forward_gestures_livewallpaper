@@ -1,16 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
+
+import 'android/wallpaper.dart';
 
 void main() {
-  SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(RootWidget());
+  SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
 }
 
 class RootWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: MyHome(),
+    return ChangeNotifierProvider<WallpaperAPI>(
+      create: (_) => WallpaperAPI(initColors: true),
+      child: MaterialApp(
+        home: MyHome(),
+        title: "Double Tap",
+      ),
     );
   }
 }
@@ -22,79 +30,99 @@ class MyHome extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var home = Homepage();
     return Scaffold(
       backgroundColor: Colors.transparent,
-      body: Homepage(),
+      body: home,
+      floatingActionButton: FloatingActionButton(
+        child: Icon(Icons.palette),
+        onPressed: () {
+          Provider.of<WallpaperAPI>(context).getWallpaperColors();
+        },
+      ),
     );
   }
 }
 
-class Homepage extends StatelessWidget {
-  static const platform = const MethodChannel(
-    'com.example.forward_gestures_livewallpaper/events',
-  );
-
+class Homepage extends StatefulWidget {
   const Homepage({
     Key key,
   }) : super(key: key);
 
-  Future<void> _sendWallpaperEvent(TapDownDetails ev) async {
-    try {
-      await platform.invokeMethod(
-        "wallpaperEvent",
-        [ev.globalPosition.dx, ev.globalPosition.dy],
-      );
-    } on PlatformException catch (e) {
-      debugPrint("Failed to send a Wallpaper command");
-      print(e);
-    }
+  @override
+  _HomepageState createState() => _HomepageState();
+}
+
+class _HomepageState extends State<Homepage> {
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    Provider.of<WallpaperAPI>(context).updateScrollEvents();
   }
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      child: SizedBox.expand(
-        child: Container(
-          child: PageView(
-            children: <Widget>[
-              Container(
-                child: Center(
-                  child: Text("Page 1"),
-                ),
+    return Stack(
+      children: <Widget>[
+        Consumer<WallpaperAPI>(
+          builder: (BuildContext context, value, Widget child) {
+            return Center(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: <Widget>[
+                  Container(
+                    width: 100,
+                    height: 100,
+                    color: Provider.of<WallpaperAPI>(context).colors[0],
+                  ),
+                  Container(
+                    width: 100,
+                    height: 100,
+                    color: Provider.of<WallpaperAPI>(context).colors[1],
+                  ),
+                  Container(
+                    width: 100,
+                    height: 100,
+                    color: Provider.of<WallpaperAPI>(context).colors[2],
+                  ),
+                ],
               ),
-              Container(
-                color: Colors.black12,
-                child: Center(
-                  child: Text("Page 2"),
-                ),
+            );
+          },
+        ),
+        GestureDetector(
+          child: SizedBox.expand(
+            child: Container(
+              child: PageView(
+                controller: Provider.of<WallpaperAPI>(context).scrollController,
+                children: _getPages(),
               ),
-              Container(
-                color: Colors.black26,
-                child: Center(
-                  child: Text("Page 3"),
-                ),
+            ),
+          ),
+          onTapDown: (ev) =>
+              Provider.of<WallpaperAPI>(context).sendWallpaperCommand(ev),
+        ),
+      ],
+    );
+  }
+
+  List<Widget> _getPages() {
+    var pages = <Widget>[];
+    for (int i = 0; i < Provider.of<WallpaperAPI>(context).pageCount; i++) {
+      pages.add(
+        Container(
+          child: Center(
+            child: Text(
+              "Page ${i + 1}",
+              style: TextStyle(
+                fontSize: 20,
               ),
-              Container(
-                color: Colors.black38,
-                child: Center(
-                  child: Text("Page 4"),
-                ),
-              ),
-              Container(
-                color: Colors.black45,
-                child: Center(
-                  child: Text("Page 5"),
-                ),
-              ),
-            ],
+            ),
           ),
         ),
-      ),
-      onTapDown: (ev) {
-        // print(ev.globalPosition.dx);
-        // print(ev.globalPosition.dy);
-        _sendWallpaperEvent(ev);
-      },
-    );
+      );
+    }
+    return pages;
   }
 }

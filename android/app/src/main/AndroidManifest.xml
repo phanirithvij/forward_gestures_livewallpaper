@@ -14,6 +14,10 @@
         tools:ignore="GoogleAppIndexingWarning"
         android:allowBackup="false"
         android:fullBackupContent="false">
+
+        <receiver android:name=".MainActivity$WallpaperListener$MyReceiver" >
+        </receiver>
+
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"
