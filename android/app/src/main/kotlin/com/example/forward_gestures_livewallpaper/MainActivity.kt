@@ -9,7 +9,7 @@ import android.content.IntentFilter
 import android.graphics.PixelFormat
 import android.os.Build
 import android.os.Bundle
-//import android.util.Log
+// import android.util.Log
 import androidx.annotation.Size
 
 import io.flutter.app.FlutterActivity
@@ -23,7 +23,7 @@ class MainActivity : FlutterActivity() {
     private val channelName = "com.example.forward_gestures_livewallpaper/wallpapers"
     private val eventChannelName = "com.example.forward_gestures_livewallpaper/events"
     private lateinit var wallpaperManager: WallpaperManager
-//    private val tag = "MainActivity"
+    // private val tag = "MainActivity"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,7 +43,7 @@ class MainActivity : FlutterActivity() {
             if (call.method == "wallpaperCommand") {
                 val args = call.arguments<ArrayList<Float>>()
                 sendWallpaperEvents(args)
-//                Log.d(tag, args.toString())
+                // Log.d(tag, args.toString())
                 result.success(true)
             } else if (call.method == "wallpaperColors") {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
@@ -57,7 +57,7 @@ class MainActivity : FlutterActivity() {
             } else if (call.method == "setWallpaperOffsets") {
                 @Size(2)
                 val args = call.arguments<ArrayList<Float>>()
-//                Log.d(tag, args.toString())
+                // Log.d(tag, args.toString())
 
                 val position = args[0]
                 var numPages = args[1]
@@ -67,6 +67,7 @@ class MainActivity : FlutterActivity() {
                 }
 
                 val xOffset = position / (numPages - 1)
+                // Log.d(tag, xOffset.toString())
                 wallpaperManager.setWallpaperOffsets(flutterView.windowToken, xOffset, 0.0f)
 
             } else {
@@ -122,7 +123,7 @@ class MainActivity : FlutterActivity() {
             null
         }) ?: return null
 
-//        Log.d(tag, "${data.primaryColor.red()} ${data.primaryColor.green()} ${data.primaryColor.blue()} ${data.primaryColor.alpha()}")
+        // Log.d(tag, "${data.primaryColor.red()} ${data.primaryColor.green()} ${data.primaryColor.blue()} ${data.primaryColor.alpha()}")
         val colors = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
             arrayOf(data.primaryColor.toArgb(), data.secondaryColor?.toArgb(), data.tertiaryColor?.toArgb())
         } else {
@@ -132,15 +133,15 @@ class MainActivity : FlutterActivity() {
     }
 
     private fun sendWallpaperEvents(position: ArrayList<Float>) {
-//        Log.d(tag, "Sending a Wallpaper command")
+        // Log.d(tag, "Sending a Wallpaper command")
 
         if (wallpaperManager.wallpaperInfo != null) {
-//      Only send a command if it is a live wallpaper
+      // Only send a command if it is a live wallpaper
             wallpaperManager.sendWallpaperCommand(
                     flutterView.windowToken,
-//            if (event.action == MotionEvent.ACTION_UP)
-//              WallpaperManager.COMMAND_TAP else
-//              WallpaperManager.COMMAND_SECONDARY_TAP,
+            //if (event.action == MotionEvent.ACTION_UP)
+            //  WallpaperManager.COMMAND_TAP else
+            //  WallpaperManager.COMMAND_SECONDARY_TAP,
                     WallpaperManager.COMMAND_TAP,
                     position[0].toInt(), position[1].toInt(), 0, null
             )

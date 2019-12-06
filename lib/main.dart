@@ -14,7 +14,10 @@ class RootWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<WallpaperAPI>(
-      create: (_) => WallpaperAPI(initColors: true),
+      create: (_) => WallpaperAPI(
+        initColors: true,
+        pageCount: 8,
+      ),
       child: MaterialApp(
         home: MyHome(),
         title: "Double Tap",
