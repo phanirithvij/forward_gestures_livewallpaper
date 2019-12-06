@@ -99,7 +99,7 @@ class MainActivity : FlutterActivity() {
             // https://www.techotopia.com/index.php/Android_Broadcast_Intents_and_Broadcast_Receivers
             val intentFilter = IntentFilter()
             intentFilter.addAction(Intent.ACTION_WALLPAPER_CHANGED)
-            myReceiver = MyReceiver()
+            myReceiver = MyReceiver(eventSink!!)
             registerReceiver(myReceiver, intentFilter)
         }
 
@@ -108,13 +108,17 @@ class MainActivity : FlutterActivity() {
             unregisterReceiver(myReceiver)
         }
 
-        inner class MyReceiver : BroadcastReceiver() {
-            override fun onReceive(p0: Context?, p1: Intent?) {
-                eventSink?.success(true)
-            }
-        }
     }
 
+    class MyReceiver() : BroadcastReceiver() {
+        private lateinit var events: EventChannel.EventSink
+        constructor(events: EventChannel.EventSink) : this() {
+            this.events = events
+        }
+        override fun onReceive(p0: Context?, p1: Intent?) {
+            events.success(true)
+        }
+    }
 
     private fun getColors(): ArrayList<Int?>? {
         val data = (if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {

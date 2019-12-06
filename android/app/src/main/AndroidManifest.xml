@@ -15,7 +15,7 @@
         android:allowBackup="false"
         android:fullBackupContent="false">
 
-        <receiver android:name=".MainActivity$WallpaperListener$MyReceiver" >
+        <receiver android:name=".MainActivity$MyReceiver" >
         </receiver>
 
         <activity
