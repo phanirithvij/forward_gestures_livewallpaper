@@ -9,21 +9,20 @@
          FlutterApplication and put your custom class here. -->
     <application
         android:name="io.flutter.app.FlutterApplication"
-        android:label="forward_gestures_livewallpaper"
-        android:icon="@mipmap/ic_launcher"
-        tools:ignore="GoogleAppIndexingWarning"
         android:allowBackup="false"
-        android:fullBackupContent="false">
+        android:fullBackupContent="false"
+        android:icon="@mipmap/ic_launcher"
+        android:label="forward_gestures_livewallpaper"
+        tools:ignore="GoogleAppIndexingWarning">
 
-        <receiver android:name=".MainActivity$MyReceiver" >
-        </receiver>
+        <receiver android:name=".MainActivity$MyReceiver" />
 
         <activity
             android:name=".MainActivity"
-            android:launchMode="singleTop"
-            android:theme="@style/Theme.Lawnchair.BaseTheme"
             android:configChanges="orientation|keyboardHidden|keyboard|screenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
             android:hardwareAccelerated="true"
+            android:launchMode="singleTop"
+            android:theme="@style/Theme.Lawnchair.BaseTheme"
             android:windowSoftInputMode="adjustResize">
             <!-- This keeps the window background of the activity showing
                  until Flutter renders its first frame. It can be removed if
@@ -33,8 +32,8 @@
                 android:name="io.flutter.app.android.SplashScreenUntilFirstFrame"
                 android:value="true" />
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
     </application>
