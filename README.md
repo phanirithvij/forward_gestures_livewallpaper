@@ -34,7 +34,10 @@ Soon will be a plugin for android
 - [ ] Get the list of apps that can set a wallpaper
 - [ ] Convert to BLOC instead of provider
 - [ ] Make this a plugin
+  - [ ] Change the name
+  - [ ] Make this the example app to show how all the methods can be used
 - [ ] Start working on desktop
   - [ ] Windows
   - [ ] Linux
-  - [ ] MacOs
+  - [ ] MacOs : Contributions welcome
+  - [ ] IOS : WON'T BE DONE
