@@ -10,6 +10,7 @@ import android.graphics.PixelFormat
 import android.os.Build
 import android.os.Bundle
 // import android.util.Log
+//import androidx.annotation.NonNull
 import androidx.annotation.Size
 
 import io.flutter.app.FlutterActivity
@@ -75,6 +76,7 @@ class MainActivity : FlutterActivity() {
             }
         }
 
+        // To send events to the flutter side if the wallpaper changes
         EventChannel(flutterView, eventChannelName).setStreamHandler(WallpaperListener())
     }
 
@@ -96,9 +98,12 @@ class MainActivity : FlutterActivity() {
         private fun registerIfActive() {
             if (eventSink == null) return
 
-            // https://www.techotopia.com/index.php/Android_Broadcast_Intents_and_Broadcast_Receivers
             val intentFilter = IntentFilter()
+            // This was deprecated by android because
+            // It is not safe to set a wallpaper right after this event as it would cause a loop
+            // And this is the only way to know if the wallpaper changed
             intentFilter.addAction(Intent.ACTION_WALLPAPER_CHANGED)
+            // https://www.techotopia.com/index.php/Android_Broadcast_Intents_and_Broadcast_Receivers
             myReceiver = MyReceiver(eventSink!!)
             registerReceiver(myReceiver, intentFilter)
         }
@@ -112,11 +117,14 @@ class MainActivity : FlutterActivity() {
 
     class MyReceiver() : BroadcastReceiver() {
         private lateinit var events: EventChannel.EventSink
+
+        // This needs to be the syntax rto avoid a build error in release mode
         constructor(events: EventChannel.EventSink) : this() {
             this.events = events
         }
+
         override fun onReceive(p0: Context?, p1: Intent?) {
-            events.success(true)
+            events.success(if (p1 != null) p1.action else true)
         }
     }
 
@@ -140,12 +148,12 @@ class MainActivity : FlutterActivity() {
         // Log.d(tag, "Sending a Wallpaper command")
 
         if (wallpaperManager.wallpaperInfo != null) {
-      // Only send a command if it is a live wallpaper
+            // Only send a command if it is a live wallpaper
             wallpaperManager.sendWallpaperCommand(
                     flutterView.windowToken,
-            //if (event.action == MotionEvent.ACTION_UP)
-            //  WallpaperManager.COMMAND_TAP else
-            //  WallpaperManager.COMMAND_SECONDARY_TAP,
+                    //if (event.action == MotionEvent.ACTION_UP)
+                    //  WallpaperManager.COMMAND_TAP else
+                    //  WallpaperManager.COMMAND_SECONDARY_TAP,
                     WallpaperManager.COMMAND_TAP,
                     position[0].toInt(), position[1].toInt(), 0, null
             )
