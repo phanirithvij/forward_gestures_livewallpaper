@@ -6,6 +6,16 @@ Soon will be a plugin for android
 
 ### TODO
 
+- [x] Wallpaper change event
+- [x] Wallpaper scroll
+  - [x] Pageview
+  - [ ] Genrealize the methods
+- [x] Get wallpaper Colors
+- [ ] Wallpapar OnColorChanged
+  - [ ] remove listener
+- [x] LiveWallpaper click through
+  - [x] Forward gestures to live wallpaper
+    - [ ] What is a secondary tap (?)
 - [ ] Add the functionalities added in github/phanirithvij/BasicLauncher
   - [ ] Open LiveWallpaper picker
   - [ ] Open Wallpaper picker to set wallpaper (Intent.ACTION_SET_WALLPAPER)
