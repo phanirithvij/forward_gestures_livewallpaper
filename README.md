@@ -22,3 +22,9 @@ Soon will be a plugin for android
 - [ ] Crop on dart side (?)
 - [ ] Get the list of live wallpaper providers
 - [ ] Get the list of apps that can set a wallpaper
+- [ ] Convert to BLOC instead of provider
+- [ ] Make this a plugin
+- [ ] Start working on desktop
+  - [ ] Windows
+  - [ ] Linux
+  - [ ] MacOs
