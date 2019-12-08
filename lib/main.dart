@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
-import 'android/wallpaper.dart';
+import 'package:forward_gestures_livewallpaper/android/wallpaper.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -17,6 +17,7 @@ class RootWidget extends StatelessWidget {
       create: (_) => WallpaperAPI(
         initColors: true,
         pageCount: 8,
+        subscribeWallpaperChanges: true,
       ),
       child: MaterialApp(
         home: MyHome(),
@@ -112,7 +113,8 @@ class _HomepageState extends State<Homepage> {
 
   List<Widget> _getPages() {
     var pages = <Widget>[];
-    for (int i = 0; i < Provider.of<WallpaperAPI>(context).pageCount; i++) {
+    int pageCount = Provider.of<WallpaperAPI>(context).pageCount;
+    for (int i = 0; i < pageCount; i++) {
       pages.add(
         Container(
           child: Center(
