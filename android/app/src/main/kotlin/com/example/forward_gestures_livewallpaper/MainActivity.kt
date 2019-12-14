@@ -1,22 +1,23 @@
 package com.example.forward_gestures_livewallpaper
 
+//import android.graphics.Color
+// import android.util.Log
+//import androidx.annotation.NonNull
+
 import android.app.WallpaperManager
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-//import android.graphics.Color
 import android.graphics.PixelFormat
 import android.os.Build
 import android.os.Bundle
-// import android.util.Log
-//import androidx.annotation.NonNull
 import androidx.annotation.Size
-
 import io.flutter.app.FlutterActivity
 import io.flutter.plugin.common.EventChannel
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugins.GeneratedPluginRegistrant
+import java.lang.Exception
 
 class MainActivity : FlutterActivity() {
 
@@ -24,6 +25,7 @@ class MainActivity : FlutterActivity() {
     private val channelName = "com.example.forward_gestures_livewallpaper/wallpapers"
     private val eventChannelName = "com.example.forward_gestures_livewallpaper/events"
     private lateinit var wallpaperManager: WallpaperManager
+    private val myListener = WallpaperListener()
     // private val tag = "MainActivity"
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -77,17 +79,34 @@ class MainActivity : FlutterActivity() {
         }
 
         // To send events to the flutter side if the wallpaper changes
-        EventChannel(flutterView, eventChannelName).setStreamHandler(WallpaperListener())
+        EventChannel(flutterView, eventChannelName).setStreamHandler(myListener)
+    }
+
+    override fun onDestroy() {
+        myListener.unregisterIfActive()
+        super.onDestroy()
     }
 
     // https://medium.com/flutter/flutter-platform-channels-ce7f540a104e
     inner class WallpaperListener : EventChannel.StreamHandler {
         private var eventSink: EventChannel.EventSink? = null
-        private lateinit var myReceiver: MyReceiver
+        lateinit var myReceiver: MyReceiver
+        private val intentFilter = IntentFilter()
+
+        init {
+            // This was deprecated by android because
+            // It is not safe to set a wallpaper right after this event as it would cause a loop
+            // And this is the only way to know if the wallpaper changed
+            intentFilter.addAction(Intent.ACTION_WALLPAPER_CHANGED)
+            // https://www.techotopia.com/index.php/Android_Broadcast_Intents_and_Broadcast_Receivers
+        }
 
         override fun onListen(arguments: Any?, events: EventChannel.EventSink?) {
             eventSink = events
-            registerIfActive()
+            if (eventSink != null) {
+                myReceiver = MyReceiver(eventSink!!)
+                registerIfActive()
+            }
         }
 
         override fun onCancel(arguments: Any?) {
@@ -97,20 +116,15 @@ class MainActivity : FlutterActivity() {
 
         private fun registerIfActive() {
             if (eventSink == null) return
-
-            val intentFilter = IntentFilter()
-            // This was deprecated by android because
-            // It is not safe to set a wallpaper right after this event as it would cause a loop
-            // And this is the only way to know if the wallpaper changed
-            intentFilter.addAction(Intent.ACTION_WALLPAPER_CHANGED)
-            // https://www.techotopia.com/index.php/Android_Broadcast_Intents_and_Broadcast_Receivers
-            myReceiver = MyReceiver(eventSink!!)
             registerReceiver(myReceiver, intentFilter)
         }
 
-        private fun unregisterIfActive() {
+        fun unregisterIfActive() {
             if (eventSink == null) return
-            unregisterReceiver(myReceiver)
+            try {
+                unregisterReceiver(myReceiver)
+            } catch (e: Exception) {
+            }
         }
 
     }

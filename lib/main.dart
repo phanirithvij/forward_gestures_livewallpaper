@@ -42,6 +42,7 @@ class MyHome extends StatelessWidget {
         child: Icon(Icons.palette),
         onPressed: () {
           Provider.of<WallpaperAPI>(context).getWallpaperColors();
+          // SystemChrome.setEnabledSystemUIOverlays(SystemUiOverlay.values);
         },
       ),
     );
@@ -71,28 +72,8 @@ class _HomepageState extends State<Homepage> {
       children: <Widget>[
         Consumer<WallpaperAPI>(
           builder: (BuildContext context, value, Widget child) {
-            return Center(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: <Widget>[
-                  Container(
-                    width: 100,
-                    height: 100,
-                    color: Provider.of<WallpaperAPI>(context).colors[0],
-                  ),
-                  Container(
-                    width: 100,
-                    height: 100,
-                    color: Provider.of<WallpaperAPI>(context).colors[1],
-                  ),
-                  Container(
-                    width: 100,
-                    height: 100,
-                    color: Provider.of<WallpaperAPI>(context).colors[2],
-                  ),
-                ],
-              ),
-            );
+            // return FrostedExample();
+            return ColorWidgets();
           },
         ),
         GestureDetector(
@@ -129,5 +110,37 @@ class _HomepageState extends State<Homepage> {
       );
     }
     return pages;
+  }
+}
+
+class ColorWidgets extends StatelessWidget {
+  const ColorWidgets({
+    Key key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: <Widget>[
+          Container(
+            width: 100,
+            height: 100,
+            color: Provider.of<WallpaperAPI>(context).colors[0],
+          ),
+          Container(
+            width: 100,
+            height: 100,
+            color: Provider.of<WallpaperAPI>(context).colors[1],
+          ),
+          Container(
+            width: 100,
+            height: 100,
+            color: Provider.of<WallpaperAPI>(context).colors[2],
+          ),
+        ],
+      ),
+    );
   }
 }

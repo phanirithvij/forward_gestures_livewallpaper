@@ -12,7 +12,7 @@ Soon will be a plugin for android
   - [ ] Genrealize the methods
 - [x] Get wallpaper Colors
 - [ ] Wallpapar OnColorChanged
-  - [ ] remove listener
+  - [ ] add/remove listeners
 - [x] LiveWallpaper click through
   - [x] Forward gestures to live wallpaper
     - [ ] What is a secondary tap (?)
